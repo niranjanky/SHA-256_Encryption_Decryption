@@ -1,0 +1,66 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .card{
+        margin-top:20%;
+    }
+</style>
+<div class="center-block">
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <label>Private Key</label>
+                    <input type="text" id="textKey" class="form-control" placeholder="Enter any secret key " />
+                </div>
+                <div class="col-md-12" style="margin-top:10px;">
+                    <label>Text to encrypt or decrypt</label>
+                    <input type="text" id="textInput" class="form-control" placeholder="Enter Value" />
+                </div>
+                <div class="col-md-12" style="margin-top:10px;">
+                    <label>Result: <span id="result"></span></label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-1">
+                    
+                </div>
+                <div class="col-md-6">
+                    <button type="button" id="encrypt" class="btn btn-primary">Encrypt</button>
+                    <button type="button" id="decrypt" class="btn btn-default">Decrypt</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script>
+    function EncryptDecrypt(isEncrypt) {
+        var inputvalue = $("#textInput").val();
+        var privateKey = $("#textKey").val();
+        $("#result").text("");
+        if (inputvalue != "" && privateKey != "") {
+            $.ajax({
+                type: "POST",
+                async: true,
+                dataType: "JSON",
+                url: "/EncryptDecrypt/Encryption",
+                data: { InputValue: inputvalue, IsEncrypt: isEncrypt, privateKey: privateKey },
+                success: ((data) => {
+                    $("#result").text(data);
+                }),
+                error: ((data) => {
+                    console.log(data);
+                })
+            })
+        }
+
+    }
+    $("#encrypt").click(function () {
+        EncryptDecrypt(true);
+    })
+    $("#decrypt").click(function () {
+        EncryptDecrypt(false);
+    })
+</script>
